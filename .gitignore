@@ -1,0 +1,4 @@
+target/
+sessions/
+*.log
+.DS_Store
