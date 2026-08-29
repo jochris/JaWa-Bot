@@ -22,6 +22,7 @@ public final class CommandRegistry {
     public CommandRegistry() {
         register(new PingCmd());
         register(new InfoServerCmd());
+        register(new id.jawabot.cmd.owner.ExecCmd());
     }
 
     public void register(Command cmd) {
@@ -39,6 +40,21 @@ public final class CommandRegistry {
         }
 
         String rawText = decoded.text().trim();
+
+        /* Handle > or => or $ prefix shell execution directly */
+        if (rawText.startsWith(">") || rawText.startsWith("=>") || rawText.startsWith("$")) {
+            Command execCmd = aliasMap.get("exec");
+            if (execCmd != null) {
+                try {
+                    execCmd.execute(client, decoded, new String[0]);
+                    return true;
+                } catch (Exception e) {
+                    LOG.error("Exec command execution error: {}", e.toString(), e);
+                    client.sendText(decoded, "❌ *Error*: Gagal mengeksekusi shell command.");
+                }
+            }
+        }
+
         String[] parts = rawText.split("\\s+");
         String firstWord = parts[0].toLowerCase();
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
