@@ -23,6 +23,7 @@ public final class CommandRegistry {
         register(new PingCmd());
         register(new InfoServerCmd());
         register(new id.jawabot.cmd.owner.ExecCmd());
+        register(new id.jawabot.cmd.owner.ModeCmd());
     }
 
     public void register(Command cmd) {
@@ -36,6 +37,11 @@ public final class CommandRegistry {
 
     public boolean dispatch(JaWaClient client, MessageReceiver.Decoded decoded) {
         if (decoded == null || decoded.text() == null || decoded.text().isBlank()) {
+            return false;
+        }
+
+        /* If Self mode is active, ignore non-owner messages completely */
+        if (!id.jawabot.config.BotConfig.isPublicMode() && !id.jawabot.config.BotConfig.isOwner(decoded.senderJid())) {
             return false;
         }
 
