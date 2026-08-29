@@ -35,6 +35,27 @@ public final class CommandRegistry {
         LOG.info("Registered command: {} [tag={}, aliases={}]", cmd.name(), cmd.tag(), cmd.aliases());
     }
 
+    private byte[] menuThumbnailBytes = null;
+
+    private byte[] getMenuThumbnail() {
+        if (menuThumbnailBytes == null) {
+            try {
+                java.net.http.HttpClient httpClient = java.net.http.HttpClient.newHttpClient();
+                java.net.http.HttpRequest req = java.net.http.HttpRequest.newBuilder()
+                    .uri(java.net.URI.create("https://files.catbox.moe/th2c69.jpg"))
+                    .timeout(java.time.Duration.ofSeconds(10))
+                    .GET().build();
+                var resp = httpClient.send(req, java.net.http.HttpResponse.BodyHandlers.ofByteArray());
+                if (resp.statusCode() == 200) {
+                    menuThumbnailBytes = resp.body();
+                }
+            } catch (Exception e) {
+                LOG.warn("Failed fetching menu thumbnail: {}", e.toString());
+            }
+        }
+        return menuThumbnailBytes;
+    }
+
     public boolean dispatch(JaWaClient client, MessageReceiver.Decoded decoded) {
         if (decoded == null || decoded.text() == null || decoded.text().isBlank()) {
             return false;
@@ -66,7 +87,8 @@ public final class CommandRegistry {
 
         /* Auto-generate menu/help if requested */
         if (firstWord.equals(".menu") || firstWord.equals(".help")) {
-            client.sendCtaText(decoded, renderMenuText());
+            var button = id.jawa.feature.messaging.MessageEncoder.CtaButton.url("Kunjungi", "https://astralune.cv");
+            client.sendCtaWithImage(decoded, renderMenuText(), "JaWa-Bot", getMenuThumbnail(), java.util.List.of(button));
             return true;
         }
 

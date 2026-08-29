@@ -38,7 +38,6 @@ public final class ExecCmd implements Command {
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         if (!BotConfig.isOwner(decoded.senderJid())) {
-            client.sendText(decoded, "⛔ *Akses Ditolak*: Perintah ini hanya dapat dijalankan oleh Owner bot.");
             return;
         }
 
