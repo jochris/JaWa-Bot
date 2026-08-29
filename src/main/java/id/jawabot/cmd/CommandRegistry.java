@@ -66,7 +66,7 @@ public final class CommandRegistry {
 
         /* Auto-generate menu/help if requested */
         if (firstWord.equals(".menu") || firstWord.equals(".help")) {
-            client.sendText(decoded, renderMenuText());
+            client.sendCtaText(decoded, renderMenuText());
             return true;
         }
 
