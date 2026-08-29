@@ -57,15 +57,23 @@ public final class CommandRegistry {
 
         String[] parts = rawText.split("\\s+");
         String firstWord = parts[0].toLowerCase();
-        String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
 
         /* Auto-generate menu/help if requested */
-        if (firstWord.equals(".menu") || firstWord.equals("menu") || firstWord.equals(".help") || firstWord.equals("help")) {
+        if (firstWord.equals(".menu") || firstWord.equals(".help")) {
             client.sendText(decoded, renderMenuText());
             return true;
         }
 
+        /* Commands must start with '.' prefix */
+        if (!firstWord.startsWith(".")) {
+            return false;
+        }
+
         Command cmd = aliasMap.get(firstWord);
+        if (cmd == null) {
+            cmd = aliasMap.get(firstWord.substring(1));
+        }
+
         if (cmd != null) {
             String[] args = Arrays.copyOfRange(parts, 1, parts.length);
             try {

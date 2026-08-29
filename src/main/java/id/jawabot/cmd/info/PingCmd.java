@@ -30,7 +30,7 @@ public final class PingCmd implements Command {
     public String description() { return "Cek kecepatan respon bot dan durasi aktif (uptime)."; }
 
     @Override
-    public List<String> aliases() { return List.of(".ping", "ping", ".p", "p"); }
+    public List<String> aliases() { return List.of(".ping", ".p"); }
 
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {

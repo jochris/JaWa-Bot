@@ -30,7 +30,7 @@ public final class InfoServerCmd implements Command {
     public String description() { return "Menampilkan informasi detail spesifikasi server, OS, CPU, RAM, dan Java Runtime."; }
 
     @Override
-    public List<String> aliases() { return List.of(".infoserver", "infoserver", ".info", "info"); }
+    public List<String> aliases() { return List.of(".infoserver", ".info"); }
 
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
