@@ -75,6 +75,7 @@ public final class Main {
                 System.out.println("\n==================================================");
                 System.out.println("🎉 JaWa-Bot connected successfully & listening!");
                 System.out.println("==================================================\n");
+                client.preloadJoinedGroups();
             }
 
             @Override
