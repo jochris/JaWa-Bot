@@ -45,7 +45,7 @@ public final class CommandRegistry {
 
         /* Auto-generate menu/help if requested */
         if (firstWord.equals(".menu") || firstWord.equals("menu") || firstWord.equals(".help") || firstWord.equals("help")) {
-            client.sendText(chatJid, renderMenuText());
+            client.sendText(decoded, renderMenuText());
             return true;
         }
 
@@ -57,7 +57,7 @@ public final class CommandRegistry {
                 return true;
             } catch (Exception e) {
                 LOG.error("Command execution error for {}: {}", cmd.name(), e.toString(), e);
-                client.sendText(chatJid, "❌ *Error*: Gagal mengeksekusi perintah `" + cmd.name() + "`.");
+                client.sendText(decoded, "❌ *Error*: Gagal mengeksekusi perintah `" + cmd.name() + "`.");
             }
         }
         return false;
@@ -65,25 +65,33 @@ public final class CommandRegistry {
 
     public String renderMenuText() {
         StringBuilder sb = new StringBuilder();
-        sb.append("🤖 *JAWA-BOT COMMAND MENU*\n");
-        sb.append("========================================\n\n");
+        sb.append("🤖 *JaWa-Bot*\n\n");
 
         Map<String, List<Command>> byTag = new LinkedHashMap<>();
         for (Command cmd : commands.values()) {
-            byTag.computeIfAbsent(cmd.tag().toUpperCase(), k -> new ArrayList<>()).add(cmd);
+            byTag.computeIfAbsent(cmd.tag().toLowerCase(), k -> new ArrayList<>()).add(cmd);
         }
 
         for (var entry : byTag.entrySet()) {
-            sb.append("📁 *CATEGORY: ").append(entry.getKey()).append("*\n");
+            String categoryName = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1);
+            sb.append("📁 *").append(categoryName).append("*\n");
             for (Command cmd : entry.getValue()) {
-                sb.append("  • *").append(cmd.usage()).append("*\n");
-                sb.append("    _Desc_: ").append(cmd.description()).append("\n");
+                String firstAlias = "";
+                if (cmd.aliases() != null) {
+                    for (String a : cmd.aliases()) {
+                        String clean = a.startsWith(".") ? a.substring(1) : a;
+                        if (!clean.equalsIgnoreCase(cmd.name())) {
+                            firstAlias = " (" + a + ")";
+                            break;
+                        }
+                    }
+                }
+                sb.append("• *").append(cmd.name()).append("*").append(firstAlias).append("\n");
             }
             sb.append("\n");
         }
 
-        sb.append("========================================\n");
-        sb.append("💡 *Tip*: Ketik `.ping` atau `.infoserver` untuk mencoba.");
+        sb.append("💡 _Ketik nama perintah di atas._");
         return sb.toString();
     }
 }
