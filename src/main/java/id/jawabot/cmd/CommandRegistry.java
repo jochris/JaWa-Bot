@@ -87,13 +87,8 @@ public final class CommandRegistry {
 
         /* Auto-generate menu/help if requested */
         if (firstWord.equals(".menu") || firstWord.equals(".help")) {
-            byte[] thumb = getMenuThumbnail();
-            String fullText = renderMenuText() + "\n\n🌐 *Kunjungi*: https://astralune.cv";
-            if (thumb != null && thumb.length > 0) {
-                client.sendImage(decoded, thumb, fullText);
-            } else {
-                client.sendText(decoded, fullText);
-            }
+            var button = id.jawa.feature.messaging.MessageEncoder.CtaButton.url("Kunjungi", "https://astralune.cv");
+            client.sendCtaWithImage(decoded, renderMenuText(), "JaWa-Bot", getMenuThumbnail(), java.util.List.of(button));
             return true;
         }
 
