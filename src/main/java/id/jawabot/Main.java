@@ -20,9 +20,7 @@ public final class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
-        System.out.println("==================================================");
         System.out.println("🤖 Starting JaWa-Bot (WhatsApp Client Bot)");
-        System.out.println("==================================================");
 
         Path dbPath = Path.of("sessions/jawabot.db");
         SqliteAuthStore store = new SqliteAuthStore(dbPath);
@@ -62,19 +60,15 @@ public final class Main {
                         String formattedCode = code.length() == 8
                             ? code.substring(0, 4) + "-" + code.substring(4)
                             : code;
-                        System.out.println("\n==================================================");
                         System.out.println("📱 Target Phone Number: +" + targetPhone);
                         System.out.println("🔑 Pairing Code      : " + formattedCode);
-                        System.out.println("==================================================\n");
                     });
                 }
             }
 
             @Override
             public void onConnected() {
-                System.out.println("\n==================================================");
                 System.out.println("🎉 JaWa-Bot connected successfully & listening!");
-                System.out.println("==================================================\n");
                 client.preloadJoinedGroups();
             }
 
