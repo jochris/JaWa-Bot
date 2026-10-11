@@ -37,14 +37,14 @@ public final class ModeCmd implements Command {
         String raw = decoded.text().trim().toLowerCase();
         if (raw.startsWith(".self") || raw.equals("self") || (args.length > 0 && args[0].equalsIgnoreCase("self"))) {
             BotConfig.setPublicMode(false);
-            client.messages().sendText(decoded, "🔒 *Bot Mode*: Berhasil diubah ke *SELF MODE* (Hanya merespon pesan dari Owner dan nomor Bot).");
+            client.messages().sendReply(decoded, "🔒 *Bot Mode*: Berhasil diubah ke *SELF MODE* (Hanya merespon pesan dari Owner dan nomor Bot).");
             LOG.info("Bot mode set to SELF MODE by owner/self {}", decoded.senderJid());
             return;
         }
 
         if (raw.startsWith(".public") || raw.equals("public") || (args.length > 0 && args[0].equalsIgnoreCase("public"))) {
             BotConfig.setPublicMode(true);
-            client.messages().sendText(decoded, "🌐 *Bot Mode*: Berhasil diubah ke *PUBLIC MODE* (Merespon semua pengguna).");
+            client.messages().sendReply(decoded, "🌐 *Bot Mode*: Berhasil diubah ke *PUBLIC MODE* (Merespon semua pengguna).");
             LOG.info("Bot mode set to PUBLIC MODE by owner/self {}", decoded.senderJid());
             return;
         }
@@ -53,6 +53,6 @@ public final class ModeCmd implements Command {
         boolean newMode = !current;
         BotConfig.setPublicMode(newMode);
         String modeName = newMode ? "PUBLIC MODE 🌐" : "SELF MODE 🔒";
-        client.messages().sendText(decoded, "⚙️ *Bot Mode*: Berhasil diubah ke *" + modeName + "*.");
+        client.messages().sendReply(decoded, "⚙️ *Bot Mode*: Berhasil diubah ke *" + modeName + "*.");
     }
 }

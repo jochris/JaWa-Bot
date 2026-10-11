@@ -56,7 +56,7 @@ public final class CommandRegistry {
                     return true;
                 } catch (Exception e) {
                     LOG.error("Exec command execution error: {}", e.toString(), e);
-                    client.messages().sendText(decoded, "❌ *Error*: Gagal mengeksekusi shell command.");
+                    client.messages().sendReply(decoded, "❌ *Error*: Gagal mengeksekusi shell command.");
                 }
             }
         }
@@ -65,7 +65,7 @@ public final class CommandRegistry {
         String firstWord = parts[0].toLowerCase();
 
         if (firstWord.equals(".menu") || firstWord.equals(".help")) {
-            client.messages().sendText(decoded, renderMenuText());
+            client.messages().sendReply(decoded, renderMenuText());
             return true;
         }
 
@@ -85,7 +85,7 @@ public final class CommandRegistry {
                 return true;
             } catch (Exception e) {
                 LOG.error("Command execution error for {}: {}", cmd.name(), e.toString(), e);
-                client.messages().sendText(decoded, "❌ *Error*: Gagal mengeksekusi perintah `" + cmd.name() + "`.");
+                client.messages().sendReply(decoded, "❌ *Error*: Gagal mengeksekusi perintah `" + cmd.name() + "`.");
             }
         }
         return false;

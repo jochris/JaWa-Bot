@@ -51,7 +51,7 @@ public final class ExecCmd implements Command {
         }
 
         if (commandLine.isBlank()) {
-            client.messages().sendText(decoded, "⚠️ *Penggunaan*: `> <perintah_shell>` (contoh: `> ls -la` atau `> uptime`)");
+            client.messages().sendReply(decoded, "⚠️ *Penggunaan*: `> <perintah_shell>` (contoh: `> ls -la` atau `> uptime`)");
             return;
         }
 
@@ -79,12 +79,12 @@ public final class ExecCmd implements Command {
                 result = "[Proses selesai tanpa output]";
             }
 
-            client.messages().sendText(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
+            client.messages().sendReply(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
             LOG.info("Executed shell command by owner/self {}: {}", decoded.senderJid(), commandLine);
 
         } catch (Exception e) {
             LOG.error("Failed executing shell command: {}", commandLine, e);
-            client.messages().sendText(decoded, "❌ *Exec Error*: " + e.getMessage());
+            client.messages().sendReply(decoded, "❌ *Exec Error*: " + e.getMessage());
         }
     }
 }

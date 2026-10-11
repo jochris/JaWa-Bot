@@ -45,7 +45,7 @@ public final class DbMaintCmd implements Command {
 
         if (sub.equals("vacuum")) {
             store.vacuum();
-            client.messages().sendText(decoded, "🧹 *SQLite Maintenance*: Database berhasil divacuum & ukuran disk dioptimasi.");
+            client.messages().sendReply(decoded, "🧹 *SQLite Maintenance*: Database berhasil divacuum & ukuran disk dioptimasi.");
             LOG.info("Executed SQLite VACUUM by owner/self {}", decoded.senderJid());
             return;
         }
@@ -63,7 +63,7 @@ public final class DbMaintCmd implements Command {
         sb.append("----------------------------------------\n");
         sb.append("💡 _Gunakan `.db vacuum` untuk merapikan disk._");
 
-        client.messages().sendText(decoded, sb.toString());
+        client.messages().sendReply(decoded, sb.toString());
         LOG.info("Reported SQLite database stats to owner/self {}", decoded.senderJid());
     }
 }

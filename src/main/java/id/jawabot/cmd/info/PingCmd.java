@@ -32,7 +32,7 @@ public final class PingCmd implements Command {
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
         String text = "🏓 *Pong!*\n\n• *Status*: Active & Online\n• *Bot Uptime*: " + SystemHelper.getUptimeFormatted();
-        client.messages().sendText(decoded, text);
+        client.messages().sendReply(decoded, text);
         LOG.info("Executed .ping command for chat {}", chatJid);
     }
 }

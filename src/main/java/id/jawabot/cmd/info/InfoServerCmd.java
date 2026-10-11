@@ -32,7 +32,7 @@ public final class InfoServerCmd implements Command {
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
         String report = SystemHelper.getServerReport() + "\n🤖 *JaWa-Bot v1.0.1* (Powered by JaWa SDK 0.0.4)";
-        client.messages().sendText(decoded, report);
+        client.messages().sendReply(decoded, report);
         LOG.info("Executed .infoserver command for chat {}", chatJid);
     }
 }
