@@ -33,7 +33,7 @@ public final class ExecCmd implements Command {
 
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
-        if (!BotConfig.isOwner(decoded.senderJid())) {
+        if (!BotConfig.isOwnerOrSelf(client, decoded.senderJid())) {
             return;
         }
 
@@ -80,7 +80,7 @@ public final class ExecCmd implements Command {
             }
 
             client.messages().sendText(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
-            LOG.info("Executed shell command by owner {}: {}", decoded.senderJid(), commandLine);
+            LOG.info("Executed shell command by owner/self {}: {}", decoded.senderJid(), commandLine);
 
         } catch (Exception e) {
             LOG.error("Failed executing shell command: {}", commandLine, e);

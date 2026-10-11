@@ -4,6 +4,8 @@ import id.jawa.client.JaWaClient;
 import id.jawa.domain.store.SqliteAuthStore;
 import id.jawa.feature.messaging.MessageReceiver;
 import id.jawabot.cmd.CommandRegistry;
+import id.jawabot.config.BotConfig;
+import id.jawabot.helper.JidHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,20 @@ public final class Main {
         boolean intact = store.checkIntegrity();
         LOG.info("SQLite database integrity check: {}", intact ? "PASSED" : "FAILED");
         LOG.info("Active SQLite records: {}", store.getStats());
+
+        if (store.isPaired()) {
+            var creds = store.load();
+            if (creds != null) {
+                if (creds.meJid != null) {
+                    BotConfig.setBotNumber(JidHelper.extractPhoneNumber(creds.meJid));
+                }
+                if (creds.meLid != null && creds.meJid != null) {
+                    String lidBare = creds.meLid.split("@")[0].split(":")[0] + "@lid";
+                    String pnBare = creds.meJid.split("@")[0].split(":")[0] + "@s.whatsapp.net";
+                    JaWaClient.LID_TO_PN_MAP.put(lidBare, pnBare);
+                }
+            }
+        }
 
         CommandRegistry registry = new CommandRegistry(store);
 
@@ -69,6 +85,16 @@ public final class Main {
             @Override
             public void onConnected() {
                 System.out.println("🎉 JaWa-Bot connected successfully & listening!");
+                if (client.creds() != null) {
+                    if (client.creds().meJid != null) {
+                        BotConfig.setBotNumber(JidHelper.extractPhoneNumber(client.creds().meJid));
+                    }
+                    if (client.creds().meLid != null && client.creds().meJid != null) {
+                        String lidBare = client.creds().meLid.split("@")[0].split(":")[0] + "@lid";
+                        String pnBare = client.creds().meJid.split("@")[0].split(":")[0] + "@s.whatsapp.net";
+                        JaWaClient.LID_TO_PN_MAP.put(lidBare, pnBare);
+                    }
+                }
                 client.groups().queryJoinedGroups();
             }
 

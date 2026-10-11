@@ -42,7 +42,7 @@ public final class CommandRegistry {
             return false;
         }
 
-        if (!BotConfig.isPublicMode() && !BotConfig.isOwner(decoded.senderJid())) {
+        if (!BotConfig.isPublicMode() && !BotConfig.isOwnerOrSelf(client, decoded.senderJid())) {
             return false;
         }
 

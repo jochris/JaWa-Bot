@@ -37,7 +37,7 @@ public final class DbMaintCmd implements Command {
 
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
-        if (!BotConfig.isOwner(decoded.senderJid())) {
+        if (!BotConfig.isOwnerOrSelf(client, decoded.senderJid())) {
             return;
         }
 
@@ -46,7 +46,7 @@ public final class DbMaintCmd implements Command {
         if (sub.equals("vacuum")) {
             store.vacuum();
             client.messages().sendText(decoded, "🧹 *SQLite Maintenance*: Database berhasil divacuum & ukuran disk dioptimasi.");
-            LOG.info("Executed SQLite VACUUM by owner {}", decoded.senderJid());
+            LOG.info("Executed SQLite VACUUM by owner/self {}", decoded.senderJid());
             return;
         }
 
@@ -64,6 +64,6 @@ public final class DbMaintCmd implements Command {
         sb.append("💡 _Gunakan `.db vacuum` untuk merapikan disk._");
 
         client.messages().sendText(decoded, sb.toString());
-        LOG.info("Reported SQLite database stats to owner {}", decoded.senderJid());
+        LOG.info("Reported SQLite database stats to owner/self {}", decoded.senderJid());
     }
 }
