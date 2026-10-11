@@ -1,13 +1,9 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.helper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 
-/**
- * Helper for extracting and formatting server metrics, OS, CPU, RAM, and Uptime.
- */
 public final class SystemHelper {
 
     private static final long START_TIME = System.currentTimeMillis();

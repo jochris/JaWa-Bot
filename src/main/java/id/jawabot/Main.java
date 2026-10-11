@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot;
 
 import id.jawa.client.JaWaClient;
@@ -12,9 +11,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Main entry point for JaWa-Bot.
- */
 public final class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -25,7 +21,11 @@ public final class Main {
         Path dbPath = Path.of("sessions/jawabot.db");
         SqliteAuthStore store = new SqliteAuthStore(dbPath);
 
-        CommandRegistry registry = new CommandRegistry();
+        boolean intact = store.checkIntegrity();
+        LOG.info("SQLite database integrity check: {}", intact ? "PASSED" : "FAILED");
+        LOG.info("Active SQLite records: {}", store.getStats());
+
+        CommandRegistry registry = new CommandRegistry(store);
 
         JaWaClient client = new JaWaClient(store)
                 .autoReconnect(true)
@@ -69,7 +69,7 @@ public final class Main {
             @Override
             public void onConnected() {
                 System.out.println("🎉 JaWa-Bot connected successfully & listening!");
-                client.preloadJoinedGroups();
+                client.groups().queryJoinedGroups();
             }
 
             @Override

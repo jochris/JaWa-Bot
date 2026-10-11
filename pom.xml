@@ -6,7 +6,7 @@
 
     <groupId>id.jawabot</groupId>
     <artifactId>JaWa-Bot</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -16,21 +16,18 @@
     </properties>
 
     <dependencies>
-        <!-- JaWa WhatsApp Library -->
         <dependency>
             <groupId>io.github.jochris</groupId>
             <artifactId>JaWa</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
 
-        <!-- SQLite JDBC -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.46.0.0</version>
         </dependency>
 
-        <!-- SLF4J / Logback Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -50,7 +47,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>21</release>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>

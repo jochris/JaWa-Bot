@@ -1,12 +1,8 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.config;
 
 import id.jawabot.helper.JidHelper;
 import java.util.Set;
 
-/**
- * Configuration settings for JaWa-Bot (Owner list, Public/Self mode, etc.).
- */
 public final class BotConfig {
 
     private BotConfig() {}

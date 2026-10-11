@@ -1,11 +1,7 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.helper;
 
 import id.jawa.client.JaWaClient;
 
-/**
- * Helper for extracting clean phone numbers and resolving LID to PN mapping.
- */
 public final class JidHelper {
 
     private JidHelper() {}

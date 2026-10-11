@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.cmd.info;
 
 import id.jawa.client.JaWaClient;
@@ -10,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * InfoServer command reporting detailed system metrics, CPU, memory usage, and OS info.
- */
 public final class InfoServerCmd implements Command {
 
     private static final Logger LOG = LoggerFactory.getLogger(InfoServerCmd.class);
@@ -35,8 +31,8 @@ public final class InfoServerCmd implements Command {
     @Override
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
-        String report = SystemHelper.getServerReport() + "\n🤖 *JaWa-Bot v1.0.0* (Powered by JaWa SDK)";
-        client.sendText(decoded, report);
+        String report = SystemHelper.getServerReport() + "\n🤖 *JaWa-Bot v1.0.1* (Powered by JaWa SDK 0.0.4)";
+        client.messages().sendText(decoded, report);
         LOG.info("Executed .infoserver command for chat {}", chatJid);
     }
 }

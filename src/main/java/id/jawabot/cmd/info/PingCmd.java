@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.cmd.info;
 
 import id.jawa.client.JaWaClient;
@@ -10,9 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- * Ping command measuring response latency and bot uptime.
- */
 public final class PingCmd implements Command {
 
     private static final Logger LOG = LoggerFactory.getLogger(PingCmd.class);
@@ -36,7 +32,7 @@ public final class PingCmd implements Command {
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
         String text = "🏓 *Pong!*\n\n• *Status*: Active & Online\n• *Bot Uptime*: " + SystemHelper.getUptimeFormatted();
-        client.sendText(decoded, text);
+        client.messages().sendText(decoded, text);
         LOG.info("Executed .ping command for chat {}", chatJid);
     }
 }

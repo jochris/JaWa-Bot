@@ -1,4 +1,3 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later */
 package id.jawabot.cmd.owner;
 
 import id.jawa.client.JaWaClient;
@@ -13,9 +12,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Owner-only shell command execution (> command or .exec command).
- */
 public final class ExecCmd implements Command {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExecCmd.class);
@@ -55,7 +51,7 @@ public final class ExecCmd implements Command {
         }
 
         if (commandLine.isBlank()) {
-            client.sendText(decoded, "⚠️ *Penggunaan*: `> <perintah_shell>` (contoh: `> ls -la` atau `> uptime`)");
+            client.messages().sendText(decoded, "⚠️ *Penggunaan*: `> <perintah_shell>` (contoh: `> ls -la` atau `> uptime`)");
             return;
         }
 
@@ -83,12 +79,12 @@ public final class ExecCmd implements Command {
                 result = "[Proses selesai tanpa output]";
             }
 
-            client.sendText(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
+            client.messages().sendText(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
             LOG.info("Executed shell command by owner {}: {}", decoded.senderJid(), commandLine);
 
         } catch (Exception e) {
             LOG.error("Failed executing shell command: {}", commandLine, e);
-            client.sendText(decoded, "❌ *Exec Error*: " + e.getMessage());
+            client.messages().sendText(decoded, "❌ *Exec Error*: " + e.getMessage());
         }
     }
 }
