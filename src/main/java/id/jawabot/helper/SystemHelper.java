@@ -26,6 +26,102 @@ public final class SystemHelper {
         return sb.toString();
     }
 
+    public static String getMemoryReport() {
+        Runtime runtime = Runtime.getRuntime();
+        long heapTotal = runtime.totalMemory();
+        long heapFree = runtime.freeMemory();
+        long heapUsed = heapTotal - heapFree;
+        long heapMax = runtime.maxMemory();
+
+        java.lang.management.MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
+        long nonHeapUsed = memBean.getNonHeapMemoryUsage().getUsed();
+        long nonHeapCommitted = memBean.getNonHeapMemoryUsage().getCommitted();
+
+        long vmRssKb = 0;
+        long vmHwmKb = 0;
+        long vmSizeKb = 0;
+        int threads = 0;
+
+        try {
+            java.util.List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Path.of("/proc/self/status"));
+            for (String line : lines) {
+                if (line.startsWith("VmRSS:")) {
+                    vmRssKb = parseKb(line);
+                } else if (line.startsWith("VmHWM:")) {
+                    vmHwmKb = parseKb(line);
+                } else if (line.startsWith("VmSize:")) {
+                    vmSizeKb = parseKb(line);
+                } else if (line.startsWith("Threads:")) {
+                    String[] parts = line.split("\\s+");
+                    if (parts.length >= 2) {
+                        threads = Integer.parseInt(parts[1].trim());
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        long sysTotal = 0;
+        long sysFree = 0;
+        OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+        if (osBean instanceof com.sun.management.OperatingSystemMXBean sunOs) {
+            sysTotal = sunOs.getTotalMemorySize();
+            sysFree = sunOs.getFreeMemorySize();
+        }
+
+        long gcCount = 0;
+        long gcTimeMs = 0;
+        for (java.lang.management.GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
+            long count = gc.getCollectionCount();
+            if (count > 0) gcCount += count;
+            long time = gc.getCollectionTime();
+            if (time > 0) gcTimeMs += time;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("📊 *MEMORY USAGE & PROCESS METRICS*\n");
+        sb.append("----------------------------------------\n");
+        sb.append("• *Process RSS (Physical)*: ").append(formatBytes(vmRssKb * 1024)).append("\n");
+        sb.append("• *Process Peak RSS (HWM)*: ").append(formatBytes(vmHwmKb * 1024)).append("\n");
+        sb.append("• *Virtual Memory (VmSize)*: ").append(formatBytes(vmSizeKb * 1024)).append("\n");
+        sb.append("• *Active OS Threads*: ").append(threads).append("\n");
+        sb.append("----------------------------------------\n");
+        sb.append("• *JVM Heap Used*: ").append(formatBytes(heapUsed)).append(" / ").append(formatBytes(heapTotal));
+        sb.append(" (Max: ").append(formatBytes(heapMax)).append(")\n");
+        sb.append("• *JVM Non-Heap (Metaspace)*: ").append(formatBytes(nonHeapUsed)).append(" (Committed: ").append(formatBytes(nonHeapCommitted)).append(")\n");
+        sb.append("• *Garbage Collection*: ").append(gcCount).append(" runs (").append(gcTimeMs).append(" ms)\n");
+        sb.append("----------------------------------------\n");
+        if (sysTotal > 0) {
+            long sysUsed = sysTotal - sysFree;
+            double pct = (double) sysUsed / (double) sysTotal * 100.0;
+            sb.append("• *Host System RAM*: ").append(formatBytes(sysUsed)).append(" / ").append(formatBytes(sysTotal))
+              .append(String.format(java.util.Locale.US, " (%.1f%%)", pct)).append("\n");
+            sb.append("----------------------------------------\n");
+        }
+        sb.append("• *Uptime*: ").append(getUptimeFormatted());
+
+        return sb.toString();
+    }
+
+    private static long parseKb(String line) {
+        String[] parts = line.split("\\s+");
+        if (parts.length >= 2) {
+            try {
+                return Long.parseLong(parts[1].trim());
+            } catch (Exception ignored) {
+            }
+        }
+        return 0;
+    }
+
+    private static String formatBytes(long bytes) {
+        if (bytes <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+        if (digitGroups >= units.length) digitGroups = units.length - 1;
+        return String.format(java.util.Locale.US, "%.2f %s", bytes / Math.pow(1024, digitGroups), units[digitGroups]);
+    }
+
     public static String getServerReport() {
         Runtime runtime = Runtime.getRuntime();
         long totalMem = runtime.totalMemory();
@@ -44,18 +140,34 @@ public final class SystemHelper {
         String javaVendor = runtimeBean.getVmVendor();
         String javaVersion = System.getProperty("java.version");
 
+        long vmRssKb = 0;
+        try {
+            java.util.List<String> lines = java.nio.file.Files.readAllLines(java.nio.file.Path.of("/proc/self/status"));
+            for (String line : lines) {
+                if (line.startsWith("VmRSS:")) {
+                    vmRssKb = parseKb(line);
+                    break;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        String rssStr = vmRssKb > 0 ? formatBytes(vmRssKb * 1024) : "N/A";
+
         return """
             🖥️ *SERVER & SYSTEM METRICS*
             ----------------------------------------
             • *OS*: %s (%s, %s)
             • *CPU Cores*: %d Cores
-            • *RAM Usage*: %d MB / %d MB (Max: %d MB)
+            • *Process RSS*: %s
+            • *Heap RAM*: %d MB / %d MB (Max: %d MB)
             • *Java Runtime*: %s (%s)
             • *Bot Uptime*: %s
             ----------------------------------------
             """.formatted(
                 osName, osArch, osVersion,
                 cores,
+                rssStr,
                 usedMem / (1024 * 1024),
                 totalMem / (1024 * 1024),
                 maxMem / (1024 * 1024),

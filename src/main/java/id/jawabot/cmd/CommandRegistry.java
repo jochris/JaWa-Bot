@@ -5,6 +5,7 @@ import id.jawa.domain.store.SqliteAuthStore;
 import id.jawa.feature.messaging.MessageReceiver;
 import id.jawabot.cmd.info.InfoServerCmd;
 import id.jawabot.cmd.info.PingCmd;
+import id.jawabot.cmd.info.RamCmd;
 import id.jawabot.cmd.owner.DbMaintCmd;
 import id.jawabot.cmd.owner.ExecCmd;
 import id.jawabot.cmd.owner.ModeCmd;
@@ -23,6 +24,7 @@ public final class CommandRegistry {
     public CommandRegistry(SqliteAuthStore store) {
         register(new PingCmd());
         register(new InfoServerCmd());
+        register(new RamCmd());
         register(new ExecCmd());
         register(new ModeCmd());
         register(new DbMaintCmd(store));
