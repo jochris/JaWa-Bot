@@ -2,3 +2,4 @@ target/
 sessions/
 *.log
 .DS_Store
+dependency-reduced-pom.xml
