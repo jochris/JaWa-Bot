@@ -58,7 +58,7 @@ public final class CommandRegistry {
                     return true;
                 } catch (Exception e) {
                     LOG.error("Exec command execution error: {}", e.toString(), e);
-                    client.messages().sendReply(decoded, "❌ *Error*: Gagal mengeksekusi shell command.");
+                    client.messages().sendReply(decoded, "Error: gagal eksekusi command");
                 }
             }
         }
@@ -87,7 +87,7 @@ public final class CommandRegistry {
                 return true;
             } catch (Exception e) {
                 LOG.error("Command execution error for {}: {}", cmd.name(), e.toString(), e);
-                client.messages().sendReply(decoded, "❌ *Error*: Gagal mengeksekusi perintah `" + cmd.name() + "`.");
+                client.messages().sendReply(decoded, "Error: gagal eksekusi " + cmd.name());
             }
         }
         return false;
@@ -95,7 +95,6 @@ public final class CommandRegistry {
 
     public String renderMenuText() {
         StringBuilder sb = new StringBuilder();
-        sb.append("🤖 *JaWa-Bot*\n\n");
 
         Map<String, List<Command>> byTag = new LinkedHashMap<>();
         for (Command cmd : commands.values()) {
@@ -103,8 +102,7 @@ public final class CommandRegistry {
         }
 
         for (var entry : byTag.entrySet()) {
-            String categoryName = entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1);
-            sb.append("📁 *").append(categoryName).append("*\n");
+            sb.append("[").append(entry.getKey()).append("]\n");
             for (Command cmd : entry.getValue()) {
                 String firstAlias = "";
                 if (cmd.aliases() != null) {
@@ -116,12 +114,11 @@ public final class CommandRegistry {
                         }
                     }
                 }
-                sb.append("• *").append(cmd.name()).append("*").append(firstAlias).append("\n");
+                sb.append("• ").append(cmd.name()).append(firstAlias).append("\n");
             }
             sb.append("\n");
         }
 
-        sb.append("💡 _Ketik nama perintah di atas._");
-        return sb.toString();
+        return sb.toString().trim();
     }
 }

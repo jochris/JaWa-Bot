@@ -45,7 +45,7 @@ public final class DbMaintCmd implements Command {
 
         if (sub.equals("vacuum")) {
             store.vacuum();
-            client.messages().sendReply(decoded, "🧹 *SQLite Maintenance*: Database berhasil divacuum & ukuran disk dioptimasi.");
+            client.messages().sendReply(decoded, "Vacuum completed.");
             LOG.info("Executed SQLite VACUUM by owner/self {}", decoded.senderJid());
             return;
         }
@@ -54,16 +54,12 @@ public final class DbMaintCmd implements Command {
         Map<String, Integer> stats = store.getStats();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("🗄️ *SQLITE SESSION DATABASE STATS*\n");
-        sb.append("----------------------------------------\n");
-        sb.append("• *Database Health*: ").append(intact ? "OK (Healthy) ✅" : "CORRUPT ❌").append("\n");
+        sb.append("Database integrity: ").append(intact ? "ok" : "corrupt").append("\n");
         for (var entry : stats.entrySet()) {
-            sb.append("• *").append(entry.getKey()).append("*: ").append(entry.getValue()).append(" rows\n");
+            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append(" rows\n");
         }
-        sb.append("----------------------------------------\n");
-        sb.append("💡 _Gunakan `.db vacuum` untuk merapikan disk._");
 
-        client.messages().sendReply(decoded, sb.toString());
+        client.messages().sendReply(decoded, sb.toString().trim());
         LOG.info("Reported SQLite database stats to owner/self {}", decoded.senderJid());
     }
 }

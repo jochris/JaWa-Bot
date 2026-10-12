@@ -51,7 +51,7 @@ public final class ExecCmd implements Command {
         }
 
         if (commandLine.isBlank()) {
-            client.messages().sendReply(decoded, "⚠️ *Penggunaan*: `> <perintah_shell>` (contoh: `> ls -la` atau `> uptime`)");
+            client.messages().sendReply(decoded, "Usage: > <cmd>");
             return;
         }
 
@@ -71,20 +71,20 @@ public final class ExecCmd implements Command {
             boolean finished = process.waitFor(15, TimeUnit.SECONDS);
             if (!finished) {
                 process.destroyForcibly();
-                output.append("\n⚠️ *Timeout*: Perintah dihentikan karena melebihi 15 detik.");
+                output.append("\nTimeout: proses melebihi 15 detik.");
             }
 
             String result = output.toString().trim();
             if (result.isEmpty()) {
-                result = "[Proses selesai tanpa output]";
+                result = "[selesai tanpa output]";
             }
 
-            client.messages().sendReply(decoded, "💻 *Exec Output*:\n```\n" + result + "\n```");
+            client.messages().sendReply(decoded, result);
             LOG.info("Executed shell command by owner/self {}: {}", decoded.senderJid(), commandLine);
 
         } catch (Exception e) {
             LOG.error("Failed executing shell command: {}", commandLine, e);
-            client.messages().sendReply(decoded, "❌ *Exec Error*: " + e.getMessage());
+            client.messages().sendReply(decoded, "Error: " + e.getMessage());
         }
     }
 }

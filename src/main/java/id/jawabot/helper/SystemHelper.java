@@ -79,26 +79,21 @@ public final class SystemHelper {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("📊 *MEMORY USAGE & PROCESS METRICS*\n");
-        sb.append("----------------------------------------\n");
-        sb.append("• *Process RSS (Physical)*: ").append(formatBytes(vmRssKb * 1024)).append("\n");
-        sb.append("• *Process Peak RSS (HWM)*: ").append(formatBytes(vmHwmKb * 1024)).append("\n");
-        sb.append("• *Virtual Memory (VmSize)*: ").append(formatBytes(vmSizeKb * 1024)).append("\n");
-        sb.append("• *Active OS Threads*: ").append(threads).append("\n");
-        sb.append("----------------------------------------\n");
-        sb.append("• *JVM Heap Used*: ").append(formatBytes(heapUsed)).append(" / ").append(formatBytes(heapTotal));
+        sb.append("Process RSS: ").append(formatBytes(vmRssKb * 1024)).append("\n");
+        sb.append("Peak RSS: ").append(formatBytes(vmHwmKb * 1024)).append("\n");
+        sb.append("Virtual Memory: ").append(formatBytes(vmSizeKb * 1024)).append("\n");
+        sb.append("Threads: ").append(threads).append("\n");
+        sb.append("JVM Heap: ").append(formatBytes(heapUsed)).append(" / ").append(formatBytes(heapTotal));
         sb.append(" (Max: ").append(formatBytes(heapMax)).append(")\n");
-        sb.append("• *JVM Non-Heap (Metaspace)*: ").append(formatBytes(nonHeapUsed)).append(" (Committed: ").append(formatBytes(nonHeapCommitted)).append(")\n");
-        sb.append("• *Garbage Collection*: ").append(gcCount).append(" runs (").append(gcTimeMs).append(" ms)\n");
-        sb.append("----------------------------------------\n");
+        sb.append("JVM Non-Heap: ").append(formatBytes(nonHeapUsed)).append(" (Committed: ").append(formatBytes(nonHeapCommitted)).append(")\n");
+        sb.append("GC: ").append(gcCount).append(" runs (").append(gcTimeMs).append(" ms)\n");
         if (sysTotal > 0) {
             long sysUsed = sysTotal - sysFree;
             double pct = (double) sysUsed / (double) sysTotal * 100.0;
-            sb.append("• *Host System RAM*: ").append(formatBytes(sysUsed)).append(" / ").append(formatBytes(sysTotal))
+            sb.append("System RAM: ").append(formatBytes(sysUsed)).append(" / ").append(formatBytes(sysTotal))
               .append(String.format(java.util.Locale.US, " (%.1f%%)", pct)).append("\n");
-            sb.append("----------------------------------------\n");
         }
-        sb.append("• *Uptime*: ").append(getUptimeFormatted());
+        sb.append("Uptime: ").append(getUptimeFormatted());
 
         return sb.toString();
     }
@@ -155,16 +150,12 @@ public final class SystemHelper {
         String rssStr = vmRssKb > 0 ? formatBytes(vmRssKb * 1024) : "N/A";
 
         return """
-            🖥️ *SERVER & SYSTEM METRICS*
-            ----------------------------------------
-            • *OS*: %s (%s, %s)
-            • *CPU Cores*: %d Cores
-            • *Process RSS*: %s
-            • *Heap RAM*: %d MB / %d MB (Max: %d MB)
-            • *Java Runtime*: %s (%s)
-            • *Bot Uptime*: %s
-            ----------------------------------------
-            """.formatted(
+            OS: %s (%s, %s)
+            CPU: %d cores
+            Process RSS: %s
+            JVM Heap: %d MB / %d MB (Max: %d MB)
+            Java Runtime: %s (%s)
+            Uptime: %s""".formatted(
                 osName, osArch, osVersion,
                 cores,
                 rssStr,
