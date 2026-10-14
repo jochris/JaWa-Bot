@@ -6,6 +6,7 @@ import id.jawa.feature.messaging.MessageReceiver;
 import id.jawabot.cmd.chat.ChatActionCmd;
 import id.jawabot.cmd.chat.CheckNumCmd;
 import id.jawabot.cmd.chat.PresenceCmd;
+import id.jawabot.cmd.chat.UserInfoCmd;
 import id.jawabot.cmd.example.ButtonCmd;
 import id.jawabot.cmd.example.ListCmd;
 import id.jawabot.cmd.example.PollCmd;
@@ -18,9 +19,11 @@ import id.jawabot.cmd.group.JoinGroupCmd;
 import id.jawabot.cmd.info.InfoServerCmd;
 import id.jawabot.cmd.info.PingCmd;
 import id.jawabot.cmd.info.RamCmd;
+import id.jawabot.cmd.owner.ContactQrCmd;
 import id.jawabot.cmd.owner.DbMaintCmd;
 import id.jawabot.cmd.owner.ExecCmd;
 import id.jawabot.cmd.owner.ModeCmd;
+import id.jawabot.cmd.owner.PrivacyCmd;
 import id.jawabot.config.BotConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,9 @@ public final class CommandRegistry {
         register(new ReactCmd());
         register(new ExecCmd());
         register(new ModeCmd());
+        register(new PrivacyCmd());
+        register(new ContactQrCmd());
+        register(new UserInfoCmd());
         register(new DbMaintCmd(store));
     }
 
