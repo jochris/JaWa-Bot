@@ -47,7 +47,8 @@ public final class Main {
                 .autoReconnect(true)
                 .autoReadReceipt(true)
                 .autoComposingPresence(true)
-                .autoPreKeyUpload(true);
+                .autoPreKeyUpload(true)
+                .autoIgnoreOfflineMessages(true);
 
         client.listener(new JaWaClient.Listener() {
             @Override
