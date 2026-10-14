@@ -32,7 +32,13 @@ public final class PingCmd implements Command {
     public void execute(JaWaClient client, MessageReceiver.Decoded decoded, String[] args) {
         String chatJid = decoded.groupJid() != null ? decoded.groupJid() : decoded.senderJid();
         String text = "Pong\nUptime: " + SystemHelper.getUptimeFormatted();
-        client.messages().sendReply(decoded, text);
+        client.messages().sendReply(decoded, text).whenComplete((id, err) -> {
+            if (err != null) {
+                LOG.error("Failed to send ping reply to {}: {}", chatJid, err.toString(), err);
+            } else {
+                LOG.info("Ping reply sent with id={} to {}", id, chatJid);
+            }
+        });
         LOG.info("Executed .ping command for chat {}", chatJid);
     }
 }

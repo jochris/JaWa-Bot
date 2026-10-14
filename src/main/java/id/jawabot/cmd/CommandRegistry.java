@@ -73,6 +73,10 @@ public final class CommandRegistry {
         }
 
         String rawText = decoded.text().trim();
+        if (rawText.startsWith(".") || rawText.startsWith(">") || rawText.startsWith("$")) {
+            LOG.info("Received command '{}' from {} in {}", rawText, decoded.senderJid(),
+                decoded.groupJid() != null ? decoded.groupJid() : "DM");
+        }
 
         if (rawText.startsWith(">") || rawText.startsWith("=>") || rawText.startsWith("$")) {
             Command execCmd = aliasMap.get("exec");
